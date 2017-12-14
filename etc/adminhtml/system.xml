@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="savvycube" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>SavvyCube Connector</label>
+            <tab>service</tab>
+            <resource>SavvyCube_Connector::savvycube_settings</resource>
+            <group id="settings" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Settings</label>
+                <field id="version" translate="label" type="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+                    <label>SavvyCube Connector version</label>
+                    <frontend_model>SavvyCube\Connector\Block\Adminhtml\Version</frontend_model>
+                </field>
+                <field id="activation" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+                    <label>Connect or reconnect the store</label>
+                    <frontend_model>SavvyCube\Connector\Block\Adminhtml\Activation</frontend_model>
+                </field>
+                <field id="savvy_url" translate="label" type="link" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>SavvyCube URL</label>
+                </field>
+                <field id="base_url" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+                    <label>Store URL (must be visible online)</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
