@@ -89,11 +89,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getFullCategoryPath($categoryId)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $category = $objectManager->create('Magento\Catalog\Model\Category')->load($categoryId);
+        $category = $objectManager
+            ->create('SavvyCube\Connector\Model\EavCategory')
+            ->load($categoryId);
         $result = "";
         if ($category->getId()) {
-            $categoryFactory = $objectManager->create('Magento\Catalog\Model\ResourceModel\Category\CollectionFactory');
-            $categories = $categoryFactory->create()
+            $categoryFactory = $objectManager
+                ->create('SavvyCube\Connector\Model\EavCategoryFactory');
+            $categories = $categoryFactory->create()->getCollection()
                 ->addAttributeToSelect('name')
                 ->addAttributeToFilter('entity_id', array('in' => $category->getPathIds()))
                 ->getItems();
@@ -115,7 +118,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         if (!isset($this->_categories)) {
              $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
              $factory = $objectManager
-                 ->create('\Magento\Catalog\Model\CategoryFactory');
+                 ->create('SavvyCube\Connector\Model\EavCategoryFactory');
              $collection = $factory->create()->getCollection()
                  ->addAttributeToSelect('name');
              $this->_categories = $collection->getItems();

@@ -13,7 +13,7 @@ class Category extends StoreReport
             $data = array();
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $factory = $objectManager
-                ->create('\Magento\Catalog\Model\CategoryFactory');
+                ->create('SavvyCube\Connector\Model\EavCategoryFactory');
             $treeRoot = \Magento\Catalog\Model\Category::TREE_ROOT_ID;
             $storeRoot = $store->getRootCategoryId();
             $collection = $factory->create()->getCollection()

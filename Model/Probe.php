@@ -84,7 +84,7 @@ class Probe extends Api
         foreach ($this->helper->getStores() as $code => $store) {
             $this->helper->emulateStore($store->getId());
             $factory = $objectManager
-                ->create('\Magento\Catalog\Model\CategoryFactory');
+                ->create('SavvyCube\Connector\Model\EavCategoryFactory');
             $treeRoot = \Magento\Catalog\Model\Category::TREE_ROOT_ID;
             $storeRoot = $store->getRootCategoryId();
             $query = $factory->create()->getCollection()
