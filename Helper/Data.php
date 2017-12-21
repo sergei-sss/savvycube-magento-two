@@ -160,6 +160,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $query = $this->getConnection()->select()
             ->from($this->getTableName($table))
             ->reset(\Magento\Framework\DB\Select::COLUMNS)
+            ->where("${column} > 0")
+            ->where("${column} IS NOT NULL")
             ->columns(array("max({$column}) as max", "min({$column}) as min"));
         $result = $this->getConnection()->fetchRow($query);
         return $result;
