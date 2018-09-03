@@ -13,8 +13,6 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
 
     const SESSION_TTL = 600; # 10 min
 
-    protected $scopeConfig;
-
     protected $encryptor;
 
     protected $date;
@@ -36,7 +34,6 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function __construct(
         Framework\App\Helper\Context $context,
-        Framework\App\Config\ScopeConfigInterface $scopeConfig,
         Framework\App\Config\Storage\WriterInterface $configWriter,
         Framework\Encryption\EncryptorInterface $encryptor,
         Framework\Stdlib\DateTime\DateTime $date,
@@ -45,7 +42,6 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
         \SavvyCube\Connector\Helper\Data $helper,
         \Magento\Backend\Model\UrlInterface $backendUrl
     ) {
-        $this->scopeConfig = $scopeConfig;
         $this->configWriter = $configWriter;
         $this->encryptor = $encryptor;
         $this->date = $date;

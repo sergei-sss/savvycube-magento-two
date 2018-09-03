@@ -10,7 +10,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_moduleList;
     protected $_productMeta;
     protected $_db;
-    protected $_scopeConfig;
     protected $_storeEmulation;
     protected $_storeManager;
     protected $_categories;
@@ -24,14 +23,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\App\ProductMetadataInterface $productMeta,
         \Magento\Framework\App\ResourceConnection $resource,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Store\Model\App\Emulation $emulation,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->_moduleList = $moduleList;
         $this->_productMeta = $productMeta;
         $this->_db = $resource;
-        $this->_scopeConfig = $scopeConfig;
         $this->_emulation = $emulation;
         $this->_storeManager = $storeManager;
         $this->_storeEmulation = $emulation;
