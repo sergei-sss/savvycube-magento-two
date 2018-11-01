@@ -20,10 +20,7 @@ class Activate extends \Magento\Backend\App\Action
         if ($this->auth->promoteCandidateKeys($session)) {
             $this->auth->setToken($token);
             $this->auth->cleanCache();
-            $this->_redirect($this->getUrl(
-                'adminhtml/system_config/edit',
-                array('section' => 'savvycube')
-            ));
+            $this->_redirect($this->auth->getAppSourcesUrl());
         } else {
             $this->getResponse()
                 ->setHttpResponseCode(401)

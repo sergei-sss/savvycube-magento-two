@@ -68,6 +68,12 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
         return $url;
     }
 
+    public function getAppSourcesUrl()
+    {
+        return $this->getConfig('savvycube/settings/savvy_url')
+          . "sources";
+    }
+
     public function cleanCache()
     {
         $this->cache->clean([\Magento\Framework\App\Cache\Type\Config::CACHE_TAG]);
