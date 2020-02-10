@@ -285,8 +285,12 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $baseUrl = $this->getConfig('savvycube/settings/base_url');
         $method = strtoupper($request->getMethod());
-        $url = rtrim(strtolower(rtrim($baseUrl, '/')
-            . $request->getOriginalPathInfo()), '/');
+        $url = strtolower(
+            implode('/',
+                [trim($baseUrl, '/'),
+                trim($request->getOriginalPathInfo(), '/')]
+            )
+        );
         $paramsBase = array();
         $params = $request->getParams();
         ksort($params, SORT_STRING);
