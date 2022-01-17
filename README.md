@@ -7,6 +7,7 @@ composer config repositories.savvycube vcs https://github.com/savvycube/magento-
 composer require savvycube/module-connector:dev-master
 php bin/magento module:enable SavvyCube_Connector
 php bin/magento setup:upgrade
+php bin/magento setup:di:compile
 ```
 
 In the future, to update the extension to the latest version,
@@ -16,4 +17,5 @@ run the following commands:
 cd /path/to/your/magento/root
 composer update savvycube/module-connector
 php bin/magento setup:upgrade
+php bin/magento setup:di:compile
 ```
