@@ -3,7 +3,7 @@
 namespace SavvyCube\Connector\Helper;
 
 use Magento\Framework;
-use phpseclib\Crypt;
+
 
 class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -101,18 +101,34 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function generateKeys()
     {
-        $keys = $this->getRsa()->createKey(2048);
-        $this->setCandidatePublicKey($keys['publickey']);
-        $this->setCandidatePrivateKey($keys['privatekey']);
-        $this->cRsa = null;
+        if (class_exists("\phpseclib3\Crypt\RSA")) {
+            $privateKey = \phpseclib3\Crypt\RSA::createKey(2048);
+            $pub = $privateKey->getPublicKey()->toString('PKCS1');
+            $priv = $privateKey->toString('PKCS1');
+        } else {
+            $keys = $this->getRsa()->createKey(2048);
+            $pub = $keys['publickey'];
+            $priv = $keys["privatekey"];
+            $this->cRsa = null;
+        }
+
+        $this->setCandidatePublicKey($pub);
+        $this->setCandidatePrivateKey($priv);
     }
 
     public function getScRsa()
     {
         if (!isset($this->scRsa)) {
-            $this->scRsa = new Crypt\RSA();
-            $this->scRsa->loadKey($this->getToken());
-            $this->scRsa->setSaltLength(128);
+            if (class_exists("\phpseclib3\Crypt\RSA")) {
+                $this->scRsa = \phpseclib3\Crypt\RSA::loadPublicKey($this->getToken())
+                    ->withSaltLength(128)
+                    ->withHash("sha1")
+                    ->withMGFHash("sha1");
+            } else {
+                $this->scRsa = new \phpseclib\Crypt\RSA();
+                $this->scRsa->loadKey($this->getToken());
+                $this->scRsa->setSaltLength(128);
+            }
         }
 
         return $this->scRsa;
@@ -121,9 +137,17 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
     public function getCandidateRsa()
     {
         if (!isset($this->cRsa)) {
-            $this->cRsa = new Crypt\RSA();
-            $this->cRsa->loadKey($this->getCandidatePrivateKey());
-            $this->cRsa->setSaltLength(128);
+            if (class_exists("\phpseclib3\Crypt\RSA")) {
+                $this->cRsa = \phpseclib3\Crypt\RSA::loadPrivateKey($this->getCandidatePrivateKey())
+                    ->withSaltLength(128)
+                    ->withHash("sha1")
+                    ->withMGFHash("sha1");
+            } else {
+                $this->cRsa = new \phpseclib\Crypt\RSA();
+                $this->cRsa->loadKey($this->getCandidatePrivateKey());
+                $this->cRsa->setSaltLength(128);
+            }
+
         }
 
         return $this->cRsa;
@@ -132,9 +156,17 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
     public function getRsa()
     {
         if (!isset($this->rsa)) {
-            $this->rsa = new Crypt\RSA();
-            $this->rsa->loadKey($this->getPrivateKey());
-            $this->rsa->setSaltLength(128);
+            if (class_exists("\phpseclib3\Crypt\RSA")) {
+                $this->rsa = \phpseclib3\Crypt\RSA::loadPrivateKey($this->getPrivateKey())
+                    ->withSaltLength(128)
+                    ->withHash("sha1")
+                    ->withMGFHash("sha1");
+            } else {
+                $this->rsa = new \phpseclib\Crypt\RSA();
+                $this->rsa->loadKey($this->getPrivateKey());
+                $this->rsa->setSaltLength(128);
+            }
+
         }
 
         return $this->rsa;
@@ -267,11 +299,23 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
         return False;
     }
 
+    private function getRandomString($len) {
+        if (class_exists("\phpseclib3\Crypt\Random")) {
+            return \phpseclib3\Crypt\Random::string($len);
+        }
+        return \phpseclib\Crypt\Random::string($len);
+    }
+
     public function encrypt($key, $data)
     {
-        $cipher = new Crypt\AES();
+        if (class_exists("\phpseclib3\Crypt\AES")) {
+            $cipher = new \phpseclib3\Crypt\AES('cbc');
+        } else {
+            $cipher = new \phpseclib\Crypt\AES();
+        }
+
         $cipher->setKey($key);
-        $iv = Crypt\Random::string($cipher->getBlockLength() >> 3);
+        $iv = $this->getRandomString($cipher->getBlockLength() >> 3);
         $cipher->setIV($iv);
         return array($iv, base64_encode($cipher->encrypt($data)));
     }
@@ -330,7 +374,7 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
             && $currentTs - $this->getConfig('savvycube/settings/candidate_ts') < 120
         ) {
             $rsa = $this->getCandidateRsa();
-            $iv = Crypt\Random::string(10);
+            $iv = $this->getRandomString(10);
             return array(base64_encode($iv),
                 base64_encode($rsa->sign($iv)));
         }
