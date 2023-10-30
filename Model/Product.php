@@ -35,7 +35,7 @@ class Product extends StoreReport
                         'product_id' => 'cat_prod.product_id'
                     )
                 )
-                ->where('path like ?', "${treeRoot}/${storeRoot}%")
+                ->where('path like ?', "{$treeRoot}/{$storeRoot}%")
                 ->group('cat_prod.product_id');
 
             $collection
