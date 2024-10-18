@@ -13,6 +13,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_storeEmulation;
     protected $_storeManager;
     protected $_categories;
+    protected $_emulation;
 
     /**
      * @param \Magento\Framework\App\Helper\Context $context
