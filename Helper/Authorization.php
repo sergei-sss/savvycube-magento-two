@@ -31,6 +31,8 @@ class Authorization extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected $backendUrl;
 
+    protected $configWriter;
+
 
     public function __construct(
         Framework\App\Helper\Context $context,
